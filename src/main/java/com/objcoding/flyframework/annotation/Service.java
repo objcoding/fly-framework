@@ -1,4 +1,4 @@
-package cn.zhangchenghui.flyframework.annotation;
+package com.objcoding.flyframework.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,11 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 控制器注解
+ * 业务注解
  *
  * Created by chenghui.zhang on 2018/1/22.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Controller {
+public @interface Service {
 }

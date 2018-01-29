@@ -1,6 +1,6 @@
-package cn.zhangchenghui.flyframework.utils;
+package com.objcoding.flyframework.utils;
 
-import cn.zhangchenghui.flyframework.constants.PropsConstant;
+import com.objcoding.flyframework.constants.PropsConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,15 +14,15 @@ import java.util.Properties;
  * <p>
  * Created by chenghui.zhang on 2018/1/22.
  */
-public final class PropsUtil {
+public final class PropsUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropsUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropsUtils.class);
 
     private static Properties props;
 
     static {
         loadProps();
-        JdbcUtil.initDataSource();
+        JdbcUtils.initDataSource();
     }
 
     /**
@@ -33,7 +33,7 @@ public final class PropsUtil {
         props = new Properties();
         InputStream in = null;
         try {
-            in = PropsUtil.class.getClassLoader().getResourceAsStream(PropsConstant.CONFIG_FILE);
+            in = PropsUtils.class.getClassLoader().getResourceAsStream(PropsConstant.CONFIG_FILE);
             props.load(in);
         } catch (FileNotFoundException fnfe) {
             logger.error("未找到配置文件 => {}", fnfe);
