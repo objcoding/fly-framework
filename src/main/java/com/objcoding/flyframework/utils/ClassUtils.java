@@ -66,7 +66,7 @@ public final class ClassUtils {
                     String protocol = url.getProtocol();
                     if (protocol.equals("file")) { // 如果是文件类型协议的url
                         String packagePath = url.getPath().replaceAll("%20", " ");// %20 是html的空格符
-                        addClassFromFile(classSet, packagePath, packageName);
+                        addClass(classSet, packagePath, packageName);
                     } else if (protocol.equals("jar")) { // 如果是 jar 类型协议url
                         // 获取连接 jar 文件的连接对象
                         JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
@@ -83,7 +83,7 @@ public final class ClassUtils {
                                         if (jarEntryname.endsWith(".class")) {
                                             // 需要将 "/" 替换成 "."
                                             String className = jarEntryname.substring(0, jarEntryname.lastIndexOf(".")).replaceAll("/", ".");
-                                            addClassFromJar(classSet, className);
+                                            addClass(classSet, className);
                                         }
                                     }
                                 }
@@ -100,11 +100,12 @@ public final class ClassUtils {
         return classSet;
     }
 
-    private static void addClassFromFile(Set<Class<?>> classSet, String packagePath, String packageName) {
+    private static void addClass(Set<Class<?>> classSet, String packagePath, String packageName) {
 
     }
 
-    private static void addClassFromJar(Set<Class<?>> classSet, String className) {
-
+    private static void addClass(Set<Class<?>> classSet, String className) {
+        Class<?> clazz = loadClass(className, false);
+        classSet.add(clazz);
     }
 }
