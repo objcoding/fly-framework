@@ -3,10 +3,13 @@ package com.objcoding.flyframework.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * 类加载器工具
@@ -58,22 +61,50 @@ public final class ClassUtils {
             while (urls.hasMoreElements()) {
                 URL url = urls.nextElement();
                 if (url != null) {
+                    // protocol://host:port/path?query#fragment
+                    // protocol 可以是 http、https、ftp、file、jar
                     String protocol = url.getProtocol();
-                    if (protocol.equals("file")) {
-
-                    } else if (protocol.equals("jar")) {
-
+                    if (protocol.equals("file")) { // 如果是文件类型协议的url
+                        String packagePath = url.getPath().replaceAll("%20", " ");// %20 是html的空格符
+                        addClassFromFile(classSet, packagePath, packageName);
+                    } else if (protocol.equals("jar")) { // 如果是 jar 类型协议url
+                        // 获取连接 jar 文件的连接对象
+                        JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
+                        if (jarURLConnection != null) {
+                            // 获取jar文件对象
+                            JarFile jarFile = jarURLConnection.getJarFile();
+                            if (jarFile != null) {
+                                // 从 Jar 文件的manifest文件中获取jar属性
+                                Enumeration<JarEntry> jarEntries = jarFile.entries();
+                                while (jarEntries.hasMoreElements()) {
+                                    JarEntry jarEntry = jarEntries.nextElement();
+                                    if (jarEntry != null) {
+                                        String jarEntryname = jarEntry.getName();
+                                        if (jarEntryname.endsWith(".class")) {
+                                            // 需要将 "/" 替换成 "."
+                                            String className = jarEntryname.substring(0, jarEntryname.lastIndexOf(".")).replaceAll("/", ".");
+                                            addClassFromJar(classSet, className);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         } catch (Exception e) {
-
+            logger.error("get class failure", e);
+            throw new RuntimeException(e);
         }
 
         return classSet;
     }
 
-    private static void addClass(Set<Class<?>> classSet, String packagePath, String packageName) {
+    private static void addClassFromFile(Set<Class<?>> classSet, String packagePath, String packageName) {
+
+    }
+
+    private static void addClassFromJar(Set<Class<?>> classSet, String className) {
 
     }
 }
