@@ -3,6 +3,7 @@ package com.objcoding.flyframework.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
@@ -101,7 +102,28 @@ public final class ClassUtils {
     }
 
     private static void addClass(Set<Class<?>> classSet, String packagePath, String packageName) {
-
+        // 获取指定包名下的所有类文件信息
+        File[] files = new File(packagePath).listFiles(
+                // 条件过滤
+                (File pathname) -> (pathname.isFile() && pathname.getName().endsWith(".class")) || pathname.isDirectory()
+        );
+        if (files != null && files.length > 0) {
+            for (File pathname : files) {
+                if (pathname.isFile()) { // 文件
+                    String fileName = pathname.getName().substring(0, pathname.getName().lastIndexOf("."));
+                    String className = fileName;
+                    if (packageName != null) {
+                        className = packageName + fileName;
+                    }
+                    addClass(classSet, className);
+                } else { // 文件夹
+                    String subPackagePath = packagePath + "/" + pathname.getName();
+                    String subPackageName = packageName + "." + pathname.getName();
+                    // 递归遍历文件夹
+                    addClass(classSet, subPackagePath, subPackageName);
+                }
+            }
+        }
     }
 
     private static void addClass(Set<Class<?>> classSet, String className) {
