@@ -1,15 +1,15 @@
 package com.objcoding.flyframework.utils;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.objcoding.flyframework.helper.PropsHelper;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
-
-import com.objcoding.flyframework.constants.PropsConstant;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * jdbc连接工具，提供事务操作
@@ -42,26 +42,26 @@ public final class JdbcUtils {
     synchronized static void initDataSource() {
         logger.info("===== 初始化数据库连接池 =====");
         ComboPooledDataSource ds = new ComboPooledDataSource();
-        ds.setJdbcUrl(PropsUtils.getProperty(PropsConstant.JDBC_URL));
-        ds.setUser(PropsUtils.getProperty(PropsConstant.JDBC_USERNAME));
-        ds.setPassword(PropsUtils.getProperty(PropsConstant.JDBC_PASSWORD));
+        ds.setJdbcUrl(PropsHelper.getJdbcUrl());
+        ds.setUser(PropsHelper.getJdbcUsername());
+        ds.setPassword(PropsHelper.getJdbcPassword());
         try {
-            ds.setDriverClass(PropsUtils.getProperty(PropsConstant.JDBC_DRIVER));
+            ds.setDriverClass(PropsHelper.getJdbcDriver());
         } catch (PropertyVetoException pve) {
             logger.error("连接池设置数据库驱动失败 => {}", pve);
         }
 
         // 默认配置
-        String acquireIncrementStr = PropsUtils.getProperty(PropsConstant.JDBC_POOL_ACQUIREINCREMENT);
+        String acquireIncrementStr = PropsHelper.getJdbcPoolAcquireincrement();
         int acquireIncrement = StringUtils.isBlank(acquireIncrementStr) ? 5 : Integer.parseInt(acquireIncrementStr);
 
-        String initialPoolSizeStr = PropsUtils.getProperty(PropsConstant.JDBC_POOL_INITIALPOOLSIZE);
+        String initialPoolSizeStr = PropsHelper.getJdbcPoolInitialPoolSize();
         int initialPoolSize = StringUtils.isBlank(initialPoolSizeStr) ? 20 : Integer.parseInt(initialPoolSizeStr);
 
-        String minPoolSizeStr = PropsUtils.getProperty(PropsConstant.JDBC_POOL_MINPOOLSIZE);
+        String minPoolSizeStr = PropsHelper.getJdbcPoolMinpoolsize();
         int minPoolSize = StringUtils.isBlank(minPoolSizeStr) ? 2 : Integer.parseInt(minPoolSizeStr);
 
-        String maxPoolSizeStr = PropsUtils.getProperty(PropsConstant.JDBC_POOL_MAXPOOLSIZE);
+        String maxPoolSizeStr = PropsHelper.getJdbcPoolMaxpoolsize();
         int maxPoolSize = StringUtils.isBlank(maxPoolSizeStr) ? 50 : Integer.parseInt(maxPoolSizeStr);
 
         ds.setAcquireIncrement(acquireIncrement);
