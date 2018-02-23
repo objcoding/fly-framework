@@ -1,6 +1,6 @@
 package com.objcoding.flyframework.utils;
 
-import com.objcoding.flyframework.constants.PropsConstant;
+import com.objcoding.flyframework.helper.PropsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ public final class PropsUtils {
         props = new Properties();
         InputStream in = null;
         try {
-            in = PropsUtils.class.getClassLoader().getResourceAsStream(PropsConstant.CONFIG_FILE);
+            in = PropsUtils.class.getClassLoader().getResourceAsStream(PropsHelper.getConfigFileName());
             props.load(in);
         } catch (FileNotFoundException fnfe) {
             logger.error("未找到配置文件 => {}", fnfe);
