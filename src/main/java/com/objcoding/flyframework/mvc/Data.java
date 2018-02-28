@@ -15,4 +15,12 @@ public class Data {
     public void setData(Map<String, Object> data) {
         this.data = data;
     }
+
+    public Data(Map<String, Object> data) {
+        this.data = data;
+    }
+
+    public void put(String key, Object obj) {
+        data.put(key, obj);
+    }
 }
